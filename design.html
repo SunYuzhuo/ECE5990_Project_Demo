@@ -45,7 +45,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="index.html">
-                    ECE5990 | Automatic Balancing Camara Mount
+                    ECE5990 | Automatic Balancing Camera Mount
                 </a>
             </div>
 
@@ -96,7 +96,29 @@
                     </h2>
 
                     <p>
-                        Content
+                        <b>Introduction of motor control</b><br>
+                        We can divide the motor into two classes: regular servo motors and continues rotation motors. The mainly different between the two classes is the range of changing. The regular servo motor can can change from 0 to 180 degree, while the continues rotation motor can change from 0 to 360 degree. Because of the difference, the control algorithms are different within these motors. 
+                        <blockquote>•  Regular servo motor<br>
+                        The control algorithm of regular servo motor is designed as variable frequency control, as the figure 1 shown below.
+                        <img src="img/pwm_180.png"><br>
+                        <span style="padding-left:70px">figure 1: PWM control of regular servo motor</span><br>
+                        T1 is the duration of high voltage, which determines the angle of the motor; T2 is the duration of low voltage, which is fixed as 20ms. The relationship between  with the angle is:<br>
+                         <span style="padding-left:200px"><img src="img/eq_180.png"></span><br>
+                        •  Continues rotation motor<br>
+                        The control algorithm of continues rotation motor is designed as fixed frequency control, as the figure 2 shown below. 
+                        <img src="img/pwm_360.png"><br>
+                        <span style="padding-left:70px">figure 2: PWM control of continues rotation motor</span><br>
+                        T1 is the duration of high voltage, which determines the speed and orientation of the motor; T is the duration the whole loop, which is fixed as 20 ms. When , the orientation of the motor is clockwise and the closer to 1.3ms is , the faster the motor is; When , the orientation of the motor is counterclockwise and the closer to 1.7ms is , the faster the motor is; When , the motor will stop. 
+                        </blockquote>
+                        <b>PID control</b><br>
+                        PID control is a useful algorithm to control a servo system especially a motor system, for its significant parameters: proportional, integral and derivative. The principle of the algorithm is shown below.
+                        <span style="padding-left:200px"><img src="img/eq_pwm.png"></span><br>
+                        where Kp is to calculate the error currently, Ki is to consider all the errors before and Kd is to predict the trend according to the last two errors. By adjusting these three parameters, we can make a fast, accurate and less overshooting servo system. 
+                        <b>Motor control with saturation and dead zone</b><br>
+                        As we introduce above, the range of regular servo motor is from 0 to 180. Hence, we need to avoid the set the duty of PWM out of the range of the motor. In order to protect the motor, we a saturation function to limit the range of duty we set and source code is shown below. <br>
+                        <span style="padding-left:200px"><img src="img/code_sat.png"></span><br>
+                        Moreover, in order to prevent jittering, we set a dead zone to avoid the motor moving in a small range. The source code is shown below.<br>
+                        <span style="padding-left:200px"><img src="img/code_dead.png"></span><br>
                     </p>
 
                     <h2 class="section-heading">
@@ -104,7 +126,12 @@
                     </h2>
 
                     <p>
-                        Content
+                        The provided interfaces of the MPU6050 module are I2C and SPI and in our project, we use the I2C port. The hardware connection is shown in figure 3 below. <br>
+                        <span style="padding-left:200px"><img src="img/mpu.png"></span><br>
+                        <span style="padding-left:150px">Figure 3 Connection of MPU6050 with Raspberry Pi</span><br>
+                        MPU6050 has a 3-axis accelerator, which can provide us the accelerations of the 3-axis: x, y, and z. We can use the data to compute the angle of roll  and pitch  and the equations are shown below.<br>
+                        <span style="padding-left:150px"><img src="img/eq_mpu.png"></span><br>
+                        However, to calculate Euclidian angle yaw, we need a compass to provide additional data to compute yaw. Therefore, in our project, we ignore the rotation along z axis.
                     </p>
 
                     <h2 class="section-heading">
@@ -112,8 +139,10 @@
                     </h2>
 
                     <p>
-                        Content
+                        In order to make the performance of MPU6050 visible,  
                     </p>
+
+                    
                     
 
                     <h2 class="section-heading">The Final Frontier</h2>
